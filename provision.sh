@@ -75,12 +75,12 @@ su oracle -c "./runInstaller -silent -responseFile /vagrant/db2.rsp -ignorePrere
 
 
 #/u01/oracle/app/oraInventory/orainstRoot.sh
-#/u01/oracle/app/vagrant/product/11.2.0/dbhome_1/root.sh
+#/u01/oracle/app/vagrant/product/dbhome_1/root.sh
 /u01/oraInventory/orainstRoot.sh
-/u01/oracle/product/11.2.0/dbhome_1/root.sh
+/u01/oracle/product/dbhome_1/root.sh
 
-#echo "export ORACLE_HOME=/u01/oracle/app/vagrant/product/11.2.0/dbhome_1" >>/home/oracle/.bash_profile
-echo "export ORACLE_HOME=/u01/oracle/product/11.2.0/dbhome_1/" >>/home/oracle/.bash_profile
+#echo "export ORACLE_HOME=/u01/oracle/app/vagrant/product/dbhome_1" >>/home/oracle/.bash_profile
+echo "export ORACLE_HOME=/u01/oracle/product/dbhome_1/" >>/home/oracle/.bash_profile
 echo "export ORACLE_SID=FMW" >>/home/oracle/.bash_profile
 echo 'export PATH=$PATH:$ORACLE_HOME/bin' >>/home/oracle/.bash_profile
 chown oracle:oinstall /home/oracle/.bash_profile
@@ -159,15 +159,15 @@ nohup /u01/oracle/product/fmw/11.1.2/user_projects/domains/OAM/startWebLogic.sh 
 
 #USING LCM - remove?
 
-cd /vagrant/software/installers/idmlcm/Disk1
-su oracle -c "./runInstaller -silent -response /vagrant/response_file -jreLoc /vagrant/software/jdk -waitforcompletion"
+#cd /vagrant/software/installers/idmlcm/Disk1
+#su oracle -c "./runInstaller -silent -response /vagrant/response_file -jreLoc /vagrant/software/jdk -waitforcompletion"
+#
+#su oracle -c "mkdir /u01/oracle/product/fmw/LCMStore"
+#su oracle -c "mkdir /u01/oracle/product/fmw/Installation #Software Installation Location"
+#su oracle -c "mkdir /u01/oracle/product/fmw/Config #Shared Configuration Location"
+#
 
-su oracle -c "mkdir /u01/oracle/product/fmw/LCMStore"
-su oracle -c "mkdir /u01/oracle/product/fmw/Installation #Software Installation Location"
-su oracle -c "mkdir /u01/oracle/product/fmw/Config #Shared Configuration Location"
 
-
-
-cd /u01/oracle/product/fmw/Oracle_IDMLCM1/provisioning/bin/
-su oracle -c "./runIAMDeployment.sh -responseFile /vagrant/provisioning_oam.rsp  -target preverify"
+#cd /u01/oracle/product/fmw/Oracle_IDMLCM1/provisioning/bin/
+#su oracle -c "./runIAMDeployment.sh -responseFile /vagrant/provisioning_oam.rsp  -target preverify"
 
