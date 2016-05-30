@@ -140,6 +140,7 @@ su oracle -c "./runInstaller -silent -response /vagrant/OAM.res -jreLoc /vagrant
 
 
 #Extend domain
+#WLST generated with: configToScript('/dbs/oracle/WLS/domains/iam','/home/oracle')
 cd /u01/oracle/product/fmw/11.1.2/Oracle_IDM1/common/bin
 cp /vagrant/oam_domain/* /home/oracle/oam
 ./config.sh /home/oracle/oam
