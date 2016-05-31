@@ -89,7 +89,7 @@ echo "export ORACLE_SID=FMW" >>/home/oracle/.bash_profile
 echo 'export PATH=$PATH:$ORACLE_HOME/bin' >>/home/oracle/.bash_profile
 chown oracle:oinstall /home/oracle/.bash_profile
 
-exit
+#exit
 
 # 	DB INSTALLED
 #
