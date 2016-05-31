@@ -2,7 +2,7 @@ useradd oracle -m
 groupadd oinstall
 usermod -g oinstall oracle
 
-yum install compat-libstdc++-33 elfutils-libelf-devel gcc-c++ unixODBC unixODBC-devel libaio-devel compat-libstdc++-33.i686 libstdc++.i686 libaio-devel.i686 libaio.i686 unixODBC.i686 unixODBC-devel.i686 ksh unzip sysstat pdksh -y
+yum install compat-libcap1-1.10-1-x86_64 compat-libstdc++-33 elfutils-libelf-devel gcc-c++ unixODBC unixODBC-devel libaio-devel compat-libstdc++-33.i686 libstdc++.i686 libaio-devel.i686 libaio.i686 unixODBC.i686 unixODBC-devel.i686 ksh unzip sysstat pdksh -y
 
 fdisk /dev/sdb <<EOF
 n
