@@ -82,6 +82,7 @@ su oracle -c "./runInstaller -silent -responseFile /vagrant/db2.rsp -ignorePrere
 #echo "export ORACLE_HOME=/u01/oracle/app/vagrant/product/dbhome_1" >>/home/oracle/.bash_profile
 echo "export ORACLE_HOME=/u01/oracle/product/dbhome_1/" >>/home/oracle/.bash_profile
 echo "export ORACLE_SID=FMW" >>/home/oracle/.bash_profile
+echo "export JAVA_HOME=/vagrant/software/jdk" >>/home/oracle/.bash_profile
 echo 'export PATH=$PATH:$ORACLE_HOME/bin' >>/home/oracle/.bash_profile
 chown oracle:oinstall /home/oracle/.bash_profile
 
@@ -90,25 +91,25 @@ chown oracle:oinstall /home/oracle/.bash_profile
 # 	DB INSTALLED
 #
 
-yum -y install xorg-x11-server-Xorg.x86_64
-yum -y install compat-libstdc++-33
-yum -y install elfutils-libelf-devel
-yum -y install gcc-c++
-yum -y install glibc-devel-2.5
-yum -y install libaio
-yum -y install libaio-devel
-yum -y install libstdc++
-yum -y install sysstat
-yum -y install redhat-lsb
-yum -y install curl
-yum -y install -y MAKEDEV
-yum install -y oracle-rdbms-server-12cR1-preinstall
+#yum -y install xorg-x11-server-Xorg.x86_64
+#yum -y install compat-libstdc++-33
+#yum -y install elfutils-libelf-devel
+#yum -y install gcc-c++
+#yum -y install glibc-devel-2.5
+#yum -y install libaio
+#yum -y install libaio-devel
+#yum -y install libstdc++
+#yum -y install sysstat
+#yum -y install redhat-lsb
+#yum -y install curl
+#yum -y install -y MAKEDEV
+#yum install -y oracle-rdbms-server-12cR1-preinstall
 
-yum install -y xorg-x11-xinit
-yum install -y xclock
-yum install -y xterm
-yum install -y openmotif
-yum install -y openmotif22
+#yum install -y xorg-x11-xinit
+#yum install -y xclock
+#yum install -y xterm
+#yum install -y openmotif
+#yum install -y openmotif22
 
 
 #rm -rf /vagrant/database/*
@@ -153,6 +154,10 @@ cd /u01/oracle/product/fmw/11.1.2/oracle_common/common/bin
 #Install OUD
 cd /vagrant/packages/installers/oud/Disk1
 su oracle -c "./runInstaller -silent -response /vagrant/oud_ps3.response -jreLoc /vagrant/software/jdk -waitforcompletion"
+cd /u01/oracle/product/fmw/11.1.2/Oracle_OUD1
+echo Password12>/tmp/pass
+su - oracle -c "./oud-setup --cli --baseDN dc=scendoni,dc=org --ldapPort 1389 --adminConnectorPort 4444 --rootUserDN "cn=Directory Manager" -j /tmp/pass --no-prompt" 
+
 
 #Start Weblogic
 nohup /u01/oracle/product/fmw/11.1.2/user_projects/domains/OAM/startWebLogic.sh >home/oracle/admin.log &
