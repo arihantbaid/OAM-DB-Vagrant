@@ -2,7 +2,7 @@ useradd oracle -m
 groupadd oinstall
 usermod -g oinstall oracle
 
-yum install compat-libstdc++-33 elfutils-libelf-devel gcc-c++ unixODBC unixODBC-devel libaio-devel compat-libstdc++-33.i686 libstdc++.i686 libaio-devel.i686 libaio.i686 unixODBC.i686 unixODBC-devel.i686 ksh unzip sysstat pdksh -y
+yum install compat-libcap1-1.10-1-x86_64 compat-libstdc++-33 elfutils-libelf-devel gcc-c++ unixODBC unixODBC-devel libaio-devel compat-libstdc++-33.i686 libstdc++.i686 libaio-devel.i686 libaio.i686 unixODBC.i686 unixODBC-devel.i686 ksh unzip sysstat pdksh -y
 
 fdisk /dev/sdb <<EOF
 n
@@ -26,8 +26,8 @@ mkdir /u01/oracle
 chown oracle:oracle /u01/oracle
 
 cd /vagrant
-unzip /vagrant/linux.x64_11gR2_database_1of2.zip
-unzip /vagrant/linux.x64_11gR2_database_2of2.zip
+#unzip /vagrant/linux.x64_11gR2_database_1of2.zip
+#unzip /vagrant/linux.x64_11gR2_database_2of2.zip
 
 #sed -i s/5.2.14/20060214/g database/stage/cvu/cvu_prereq.xml
 
@@ -50,19 +50,23 @@ EOF
 
 sed -i s/1024/4096/ /etc/security/limits.d/90-nproc.conf
 
+echo "executing sysctl -p"
 sysctl -p
+echo "kernel tuned"
 
 #yum -y install xorg-x11-utils -y
 #yum install xorg-x11-xauth.x86_64 -y
 
 #dd if=/dev/zero of=/u01/swapfile bs=1024 count=11485760
-dd if=/dev/zero of=/u01/swapfile bs=1024 count=12582912
+#dd if=/dev/zero of=/u01/swapfile bs=1024 count=12582912
+dd if=/dev/zero of=/u01/swapfile bs=1k count=12288k
 mkswap /u01/swapfile
 swapon /u01/swapfile
 cat >> /etc/fstab <<EOF
 /u01/swapfile               swap                    swap    defaults        0 0
 EOF
 
+rpm -ivh /vagrant/jdk-7u79-linux-x64.rpm
 
 #cd /vagrant/database/
 mkdir /u01/oraInventory
@@ -70,8 +74,8 @@ chown oracle:oinstall /u01/oraInventory
 cd /vagrant/packages/installers/database/Disk1
 
 unset DISPLAY
-#su oracle -c "./runInstaller -silent -responseFile /vagrant/db.rsp -ignorePrereq -waitforcompletion -jreLoc /vagrant/software/jdk"
-su oracle -c "./runInstaller -silent -responseFile /vagrant/db2.rsp -ignorePrereq -waitforcompletion -jreLoc /vagrant/software/jdk"
+#su oracle -c "./runInstaller -silent -responseFile /vagrant/db.rsp -ignorePrereq -waitforcompletion -jreLoc /usr/java/jdk1.7.0_79"
+su oracle -c "./runInstaller -silent -responseFile /vagrant/db2.rsp -ignorePrereq -waitforcompletion -jreLoc /usr/java/jdk1.7.0_79"
 
 
 #/u01/oracle/app/oraInventory/orainstRoot.sh
@@ -86,7 +90,7 @@ echo "export JAVA_HOME=/vagrant/software/jdk" >>/home/oracle/.bash_profile
 echo 'export PATH=$PATH:$ORACLE_HOME/bin' >>/home/oracle/.bash_profile
 chown oracle:oinstall /home/oracle/.bash_profile
 
-
+exit
 
 # 	DB INSTALLED
 #
@@ -117,7 +121,7 @@ chown oracle:oinstall /home/oracle/.bash_profile
 cd /vagrant/packages
 #find . -name \*.zip -exec unzip {} \;
 
-su oracle -c "/vagrant/update_db.sh"
+su - oracle -c "/vagrant/update_db.sh"
 
 
 #Run RCU 
@@ -135,9 +139,9 @@ su oracle -c "mkdir -p /u01/oracle/product/fmw/11.1.2"
 cd /vagrant/packages/installers/weblogic/
 su oracle -c "/vagrant/packages/jdk/bin/java -jar wls_generic.jar -mode=silent -silent_xml=/vagrant/weblogic_silent.xml"
 
-#Install Oracle Identity Mangement
+#Install Oracle Identity Management
 cd /vagrant/packages/installers/iamsuite/Disk1
-su oracle -c "./runInstaller -silent -response /vagrant/OAM.res -jreLoc /vagrant/software/jdk -waitforcompletion"
+su oracle -c "./runInstaller -silent -response /vagrant/OAM.res -jreLoc /usr/java/jdk1.7.0_79 -waitforcompletion"
 
 
 #Extend domain
@@ -153,7 +157,7 @@ cd /u01/oracle/product/fmw/11.1.2/oracle_common/common/bin
 
 #Install OUD
 cd /vagrant/packages/installers/oud/Disk1
-su oracle -c "./runInstaller -silent -response /vagrant/oud_ps3.response -jreLoc /vagrant/software/jdk -waitforcompletion"
+su oracle -c "./runInstaller -silent -response /vagrant/oud_ps3.response -jreLoc /usr/java/jdk1.7.0_79 -waitforcompletion"
 cd /u01/oracle/product/fmw/11.1.2/Oracle_OUD1
 echo Password12>/tmp/pass
 su - oracle -c "./oud-setup --cli --baseDN dc=scendoni,dc=org --ldapPort 1389 --adminConnectorPort 4444 --rootUserDN "cn=Directory Manager" -j /tmp/pass --no-prompt" 
@@ -165,7 +169,7 @@ nohup /u01/oracle/product/fmw/11.1.2/user_projects/domains/OAM/startWebLogic.sh 
 #USING LCM - remove?
 
 #cd /vagrant/software/installers/idmlcm/Disk1
-#su oracle -c "./runInstaller -silent -response /vagrant/response_file -jreLoc /vagrant/software/jdk -waitforcompletion"
+#su oracle -c "./runInstaller -silent -response /vagrant/response_file -jreLoc /usr/java/jdk1.7.0_79 -waitforcompletion"
 
 #su oracle -c "mkdir /u01/oracle/product/fmw/LCMStore"
 #su oracle -c "mkdir /u01/oracle/product/fmw/Installation #Software Installation Location"
