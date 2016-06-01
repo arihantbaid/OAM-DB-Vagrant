@@ -90,6 +90,10 @@ echo "export JAVA_HOME=/vagrant/software/jdk" >>/home/oracle/.bash_profile
 echo 'export PATH=$PATH:$ORACLE_HOME/bin' >>/home/oracle/.bash_profile
 chown oracle:oinstall /home/oracle/.bash_profile
 
+<<<<<<< HEAD
+=======
+#exit
+>>>>>>> d6212065c671aefcee175a22350d807db8309f0f
 
 # 	DB INSTALLED
 #
