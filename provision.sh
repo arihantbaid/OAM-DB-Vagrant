@@ -2,7 +2,7 @@ useradd oracle -m
 groupadd oinstall
 usermod -g oinstall oracle
 
-yum install compat-libcap1-1.10-1-x86_64 compat-libstdc++-33 elfutils-libelf-devel gcc-c++ unixODBC unixODBC-devel libaio-devel compat-libstdc++-33.i686 libstdc++.i686 libaio-devel.i686 libaio.i686 unixODBC.i686 unixODBC-devel.i686 ksh unzip sysstat pdksh -y
+yum install compat-libcap1-1.10 compat-libstdc++-33 elfutils-libelf-devel gcc-c++ unixODBC unixODBC-devel libaio-devel compat-libstdc++-33.i686 libstdc++.i686 libaio-devel.i686 libaio.i686 unixODBC.i686 unixODBC-devel.i686 ksh unzip sysstat pdksh -y
 
 fdisk /dev/sdb <<EOF
 n
@@ -90,7 +90,6 @@ echo "export JAVA_HOME=/vagrant/software/jdk" >>/home/oracle/.bash_profile
 echo 'export PATH=$PATH:$ORACLE_HOME/bin' >>/home/oracle/.bash_profile
 chown oracle:oinstall /home/oracle/.bash_profile
 
-exit
 
 # 	DB INSTALLED
 #
@@ -147,12 +146,15 @@ su oracle -c "./runInstaller -silent -response /vagrant/OAM.res -jreLoc /usr/jav
 #Extend domain
 #WLST generated with: configToScript('/dbs/oracle/WLS/domains/iam','/home/oracle')
 cd /u01/oracle/product/fmw/11.1.2/Oracle_IDM1/common/bin
-cp /vagrant/oam_domain/* /home/oracle/oam
-./config.sh /home/oracle/oam
+cp /vagrant/oam_domain/* /home/oracle
+chown oracle:oinstall /home/oracle/*
+su - oracle -c "mkdir -p /u01/oracle/admin/domain/OAM"
+su - oracle -c "/u01/oracle/product/fmw/11.1.2/Oracle_IDM1/common/bin/wlst.sh /home/oracle/oam"
+
 
 #Create security store
 cd /u01/oracle/product/fmw/11.1.2/oracle_common/common/bin
-./wlst.sh ../../../Oracle_IDM1/common/tools/configureSecurityStore.py -d /u01/oracle/product/fmw/11.1.2/user_projects/domains/OAM -c IAM -p Password12 -m create
+su - oracle -c "/u01/oracle/product/fmw/11.1.2/Oracle_IDM1/common/bin/wlst.sh ../../../Oracle_IDM1/common/tools/configureSecurityStore.py -d /u01/oracle/product/fmw/11.1.2/user_projects/domains/OAM -c IAM -p Password12 -m create"
 #./wlst.sh ../../../Oracle_IDM1/common/tools/configureSecurityStore.py -d /u01/oracle/product/fmw/11.1.2/user_projects/domains/OAM -p Password12 -m validate
 
 #Install OUD
